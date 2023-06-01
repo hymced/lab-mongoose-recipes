@@ -16,16 +16,18 @@ mongoose
 		return Recipe.deleteMany();
 	})
 	.then(() => {
-		const recipeOne = {
-			title: "Our recipe",
-			cuisine: "Momma's Cookin'",
-		};
-
-		const recipeDB = Recipe.create(recipeOne);
-		return recipeDB;
+		return Recipe.create({
+			title: "Hamburger",
+			level: "Easy Peasy",
+			ingredients: ["Bread", "Ham", "Cheese", "Lettuce", "Egg"],
+			cuisine: "USA",
+			dishType: "main_course",
+			duration: 30,
+			creator: "everyone"
+		})
 	})
-	.then((recipeDB) => {
-		console.log("Our recipe title: ", recipeDB.title);
+	.then((recipeCreated) => {
+		console.log("Recipe created: ", recipeCreated.title);
 	})
 	.then(() => {
 		return Recipe.insertMany(data);
@@ -37,27 +39,24 @@ mongoose
 			{ new: true }
 		);
 	})
-	.then((rigatoni) => {
-		if (rigatoni.duration === 100) {
-			console.log("Duration updated sucessfully: ", rigatoni.duration);
+	.then((recipeUpdated) => {
+		if (recipeUpdated.duration === 100) {
+			console.log("Duration updated sucessfully: ", recipeUpdated.duration);
 		} else {
-			console.log("Duration not updated");
+			console.log("Something went wrong...");
 		}
-		return rigatoni;
-	})
-	.then(() => {
 		return Recipe.deleteOne({ title: "Carrot Cake" });
 	})
-	.then((carrotCake) => {
-		if (carrotCake.deletedCount > 0) {
-			return console.log("Successfully deleted Carrot Cake");
+	.then((valueDeleted) => {
+		if (valueDeleted.deletedCount > 0) {
+			return console.log("Carrot Cake successfully deleted");
 		} else {
-			return console.log("Did not delete Carrot Cake");
+			return console.log("Something went wrong...");
 		}
 	})
 	.then(() => {
 		mongoose.connection.close();
 	})
 	.catch((error) => {
-		console.error("Error connecting to the database", error);
+		console.error("Error somewhere along the promise chain starting from the connection to the database: ", error);
 	});
